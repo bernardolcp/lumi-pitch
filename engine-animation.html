@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumi Engine Animation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+
+  :root {
+    --navy: #1E2761;
+    --navy-deep: #0D1233;
+    --ice-blue: #CADCFC;
+    --ice-blue-dim: rgba(202, 220, 252, 0.3);
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --whatsapp: #25D366;
+    --success: #10B981;
+    --text-gray: #94A3B8;
+    --red: #EF4444;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy-deep);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  canvas#particles {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+  }
+
+  .scene {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+  }
+
+  /* ── Ambient light rays ── */
+  .light-rays {
+    position: fixed;
+    top: -30%; left: 50%;
+    transform: translateX(-50%);
+    width: 140%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 2s ease;
+    background: radial-gradient(
+      ellipse 60% 40% at 50% 0%,
+      rgba(202, 220, 252, 0.06) 0%,
+      transparent 70%
+    );
+  }
+  .light-rays.active { opacity: 1; }
+
+  /* ── Crossed-out labels ── */
+  .replaced-labels {
+    position: fixed;
+    top: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 80px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .replaced-labels.visible { opacity: 1; }
+
+  .replaced-label {
+    position: relative;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    padding: 10px 28px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 40px;
+    background: rgba(148, 163, 184, 0.04);
+    overflow: hidden;
+  }
+
+  .replaced-label .strike {
+    position: absolute;
+    top: 50%; left: -5%;
+    width: 0%;
+    height: 2px;
+    background: var(--red);
+    transform: translateY(-50%);
+    transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1);
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.5);
+  }
+  .replaced-label.struck .strike { width: 110%; }
+  .replaced-label.struck { color: rgba(148, 163, 184, 0.3); }
+
+  /* ── Integrated label ── */
+  .integrated-label {
+    position: fixed;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    opacity: 0;
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--ice-blue);
+    letter-spacing: 0.02em;
+    transition: opacity 1s ease;
+  }
+  .integrated-label.visible { opacity: 1; }
+
+  /* ── Journey container ── */
+  .journey {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    transform: translateY(20px);
+    position: relative;
+  }
+
+  /* ── Connection arrows (SVG paths) ── */
+  .connections {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Step node ── */
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    opacity: 0;
+    transform: translateY(40px) scale(0.9);
+    transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 2;
+  }
+  .step.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .step.active .node { transform: rotateY(0deg); }
+
+  .node {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transform: rotateY(90deg);
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+    background: linear-gradient(
+      135deg,
+      rgba(202, 220, 252, 0.12) 0%,
+      rgba(202, 220, 252, 0.04) 100%
+    );
+    border: 1px solid rgba(202, 220, 252, 0.15);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .node-glow {
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.4s;
+    background: linear-gradient(
+      135deg,
+      rgba(202, 220, 252, 0.25),
+      rgba(202, 220, 252, 0.05)
+    );
+    filter: blur(8px);
+    z-index: -1;
+  }
+  .step.active .node-glow { opacity: 1; }
+
+  .node-icon {
+    font-size: 28px;
+    filter: drop-shadow(0 0 8px rgba(202, 220, 252, 0.4));
+  }
+
+  .step-title {
+    margin-top: 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.5s ease 0.3s;
+  }
+  .step.active .step-title {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .step-number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 11px;
+    color: var(--ice-blue-dim);
+    letter-spacing: 0.15em;
+    margin-top: 4px;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.4s;
+  }
+  .step.active .step-number { opacity: 1; }
+
+  /* ── Bullets ── */
+  .bullets {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .bullet {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--text-gray);
+    padding: 7px 14px;
+    border-radius: 8px;
+    background: rgba(202, 220, 252, 0.04);
+    border: 1px solid rgba(202, 220, 252, 0.06);
+    text-align: center;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    white-space: nowrap;
+  }
+  .bullet.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .bullet.whatsapp {
+    color: var(--whatsapp);
+    border-color: rgba(37, 211, 102, 0.15);
+    background: rgba(37, 211, 102, 0.04);
+  }
+
+  /* ── Arrow connectors ── */
+  .arrow-container {
+    width: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 26px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+  }
+  .arrow-container.visible { opacity: 1; }
+
+  .arrow-line {
+    width: 48px;
+    height: 2px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .arrow-track {
+    width: 100%;
+    height: 100%;
+    background: rgba(202, 220, 252, 0.1);
+    border-radius: 1px;
+  }
+
+  .arrow-flow {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--ice-blue));
+    border-radius: 1px;
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 0 12px rgba(202, 220, 252, 0.3);
+  }
+  .arrow-container.visible .arrow-flow { width: 100%; }
+
+  .arrow-head {
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 6px solid var(--ice-blue);
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    opacity: 0;
+    transition: opacity 0.3s ease 0.4s;
+    filter: drop-shadow(0 0 4px rgba(202, 220, 252, 0.5));
+  }
+  .arrow-container.visible .arrow-head { opacity: 1; }
+
+  /* ── Feedback loop ── */
+  .feedback-loop {
+    position: absolute;
+    bottom: -60px;
+    left: 10%;
+    right: 10%;
+    height: 50px;
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .feedback-loop.visible { opacity: 1; }
+
+  .feedback-loop svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .feedback-path {
+    stroke-dasharray: 8 6;
+    stroke-dashoffset: 200;
+    animation: none;
+  }
+  .feedback-loop.visible .feedback-path {
+    animation: dashFlow 3s linear infinite;
+  }
+
+  @keyframes dashFlow {
+    to { stroke-dashoffset: 0; }
+  }
+
+  .feedback-label {
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ice-blue-dim);
+  }
+
+  /* ── Final state ── */
+  .final-text {
+    position: fixed;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .final-text.visible { opacity: 1; }
+
+  .final-text h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  .final-text h2 span {
+    color: var(--ice-blue);
+    font-style: italic;
+  }
+  .final-text p {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-top: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Logo ── */
+  .lumi-logo {
+    position: fixed;
+    bottom: 4%;
+    right: 4%;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 1s ease;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--ice-blue);
+    letter-spacing: 0.08em;
+  }
+  .lumi-logo.visible { opacity: 0.4; }
+
+  /* ── Ambient gradient orbs ── */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 0;
+    opacity: 0;
+    transition: opacity 3s ease;
+  }
+  .orb.visible { opacity: 1; }
+  .orb-1 {
+    width: 500px; height: 500px;
+    top: -10%; left: -5%;
+    background: rgba(30, 39, 97, 0.6);
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    bottom: -10%; right: -5%;
+    background: rgba(202, 220, 252, 0.04);
+  }
+  .orb-3 {
+    width: 300px; height: 300px;
+    top: 30%; left: 40%;
+    background: rgba(202, 220, 252, 0.03);
+  }
+
+  /* ── Section brackets (Marketing / Sales) ── */
+  .section-bracket {
+    position: absolute;
+    top: -52px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    z-index: 5;
+  }
+  .section-bracket.visible { opacity: 1; }
+
+  .bracket-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ice-blue);
+    padding: 5px 16px;
+    border: 1px solid rgba(202, 220, 252, 0.15);
+    border-radius: 20px;
+    background: rgba(202, 220, 252, 0.05);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+  }
+
+  .bracket-line {
+    width: 1px;
+    height: 16px;
+    background: rgba(202, 220, 252, 0.15);
+    margin-top: 4px;
+  }
+
+  /* ── Pulse ring on active node ── */
+  @keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+
+  .pulse-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 1px solid var(--ice-blue);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .step.active .pulse-ring {
+    animation: pulseRing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+
+  /* ── All-glow state ── */
+  .step.all-glow .node {
+    border-color: rgba(202, 220, 252, 0.3);
+    box-shadow: 0 0 30px rgba(202, 220, 252, 0.1);
+  }
+  .step.all-glow .node-glow { opacity: 1; }
+  .step.all-glow .pulse-ring {
+    animation: pulseRing 2.5s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient -->
+<div class="orb orb-1" id="orb1"></div>
+<div class="orb orb-2" id="orb2"></div>
+<div class="orb orb-3" id="orb3"></div>
+<canvas id="particles"></canvas>
+<div class="light-rays" id="lightRays"></div>
+
+<!-- Replaced labels -->
+<div class="replaced-labels" id="replacedLabels">
+  <div class="replaced-label" id="labelMarketing">
+    Marketing Agency
+    <div class="strike"></div>
+  </div>
+  <div class="replaced-label" id="labelSales">
+    Sales Team
+    <div class="strike"></div>
+  </div>
+</div>
+
+<div class="integrated-label" id="integratedLabel">One integrated engine</div>
+
+<!-- Main scene -->
+<div class="scene">
+  <div class="journey" id="journey">
+
+    <!-- Section brackets -->
+    <div class="section-bracket" id="bracketMarketing" style="left: 170px;">
+      <div class="bracket-label">Replaces Marketing Agency</div>
+      <div class="bracket-line"></div>
+    </div>
+    <div class="section-bracket" id="bracketSales" style="right: 70px;">
+      <div class="bracket-label">Replaces Sales Team</div>
+      <div class="bracket-line"></div>
+    </div>
+
+    <!-- Step 1: Research -->
+    <div class="step" id="step1">
+      <div class="node">
+        <div class="node-glow"></div>
+        <div class="pulse-ring"></div>
+        <div class="node-icon">🔍</div>
+      </div>
+      <div class="step-title">Research</div>
+      <div class="step-number">01</div>
+      <div class="bullets">
+        <div class="bullet">Scans trends</div>
+        <div class="bullet">Maps competitors</div>
+        <div class="bullet">Social listening</div>
+        <div class="bullet">Identifies pain points</div>
+      </div>
+    </div>
+
+    <div class="arrow-container" id="arrow1">
+      <div class="arrow-line">
+        <div class="arrow-track"></div>
+        <div class="arrow-flow"></div>
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+
+    <!-- Step 2: Create -->
+    <div class="step" id="step2">
+      <div class="node">
+        <div class="node-glow"></div>
+        <div class="pulse-ring"></div>
+        <div class="node-icon">✦</div>
+      </div>
+      <div class="step-title">Create</div>
+      <div class="step-number">02</div>
+      <div class="bullets">
+        <div class="bullet">50+ creatives/day</div>
+        <div class="bullet">Multi-channel posting</div>
+        <div class="bullet">Landing pages</div>
+        <div class="bullet">SEO + LLM ranking</div>
+      </div>
+    </div>
+
+    <div class="arrow-container" id="arrow2">
+      <div class="arrow-line">
+        <div class="arrow-track"></div>
+        <div class="arrow-flow"></div>
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+
+    <!-- Step 3: Optimize -->
+    <div class="step" id="step3">
+      <div class="node">
+        <div class="node-glow"></div>
+        <div class="pulse-ring"></div>
+        <div class="node-icon">⚡</div>
+      </div>
+      <div class="step-title">Optimize</div>
+      <div class="step-number">03</div>
+      <div class="bullets">
+        <div class="bullet">Meta, Google, TikTok</div>
+        <div class="bullet">Budget optimization</div>
+        <div class="bullet">A/B testing</div>
+        <div class="bullet">Retargeting</div>
+      </div>
+    </div>
+
+    <div class="arrow-container" id="arrow3">
+      <div class="arrow-line">
+        <div class="arrow-track"></div>
+        <div class="arrow-flow"></div>
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+
+    <!-- Step 4: Engage -->
+    <div class="step" id="step4">
+      <div class="node">
+        <div class="node-glow"></div>
+        <div class="pulse-ring"></div>
+        <div class="node-icon">💬</div>
+      </div>
+      <div class="step-title">Engage</div>
+      <div class="step-number">04</div>
+      <div class="bullets">
+        <div class="bullet whatsapp">WhatsApp</div>
+        <div class="bullet">Social media inbox</div>
+        <div class="bullet">Voice calls</div>
+        <div class="bullet">Lead qualification</div>
+      </div>
+    </div>
+
+    <div class="arrow-container" id="arrow4">
+      <div class="arrow-line">
+        <div class="arrow-track"></div>
+        <div class="arrow-flow"></div>
+        <div class="arrow-head"></div>
+      </div>
+    </div>
+
+    <!-- Step 5: Convert -->
+    <div class="step" id="step5">
+      <div class="node">
+        <div class="node-glow"></div>
+        <div class="pulse-ring"></div>
+        <div class="node-icon">✓</div>
+      </div>
+      <div class="step-title">Convert</div>
+      <div class="step-number">05</div>
+      <div class="bullets">
+        <div class="bullet">Objection handling</div>
+        <div class="bullet">Follow up</div>
+        <div class="bullet">Up/Downselling</div>
+        <div class="bullet">Personalization</div>
+      </div>
+    </div>
+
+    <!-- Feedback loop -->
+    <div class="feedback-loop" id="feedbackLoop">
+      <svg viewBox="0 0 800 50" preserveAspectRatio="none">
+        <path class="feedback-path" d="M 720 0 C 720 40, 600 45, 400 45 C 200 45, 80 40, 80 0"
+          fill="none" stroke="rgba(202,220,252,0.2)" stroke-width="1.5"/>
+      </svg>
+      <div class="feedback-label">Always learning · Always improving</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Final text -->
+<div class="final-text" id="finalText">
+  <h2>One engine. Five jobs. <span>Zero employees.</span></h2>
+  <p>From research to revenue — fully autonomous</p>
+</div>
+
+<div class="lumi-logo" id="lumiLogo">lumi</div>
+
+<script>
+// ── Particle system ──
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth * 2;
+  canvas.height = window.innerHeight * 2;
+  canvas.style.width = window.innerWidth + 'px';
+  canvas.style.height = window.innerHeight + 'px';
+  ctx.scale(2, 2);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = Math.random() * window.innerWidth;
+    this.y = Math.random() * window.innerHeight;
+    this.size = Math.random() * 1.5 + 0.3;
+    this.speedY = -(Math.random() * 0.3 + 0.1);
+    this.speedX = (Math.random() - 0.5) * 0.2;
+    this.opacity = Math.random() * 0.3 + 0.05;
+    this.fadeSpeed = Math.random() * 0.003 + 0.001;
+    this.growing = Math.random() > 0.5;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.growing) {
+      this.opacity += this.fadeSpeed;
+      if (this.opacity >= 0.35) this.growing = false;
+    } else {
+      this.opacity -= this.fadeSpeed;
+      if (this.opacity <= 0.02) this.reset();
+    }
+    if (this.y < -10) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(202, 220, 252, ${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 80; i++) particles.push(new Particle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+  particles.forEach(p => { p.update(); p.draw(); });
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// ── Timeline ──
+const timeline = [
+  // 0s - Orbs fade in
+  { time: 0, action: () => {
+    document.getElementById('orb1').classList.add('visible');
+    document.getElementById('orb2').classList.add('visible');
+    document.getElementById('orb3').classList.add('visible');
+    document.getElementById('lightRays').classList.add('active');
+  }},
+  // 1s - Show replaced labels
+  { time: 1000, action: () => {
+    document.getElementById('replacedLabels').classList.add('visible');
+  }},
+  // 2.5s - Strike through
+  { time: 2500, action: () => {
+    document.getElementById('labelMarketing').classList.add('struck');
+  }},
+  { time: 3000, action: () => {
+    document.getElementById('labelSales').classList.add('struck');
+  }},
+  // 3.8s - Integrated label
+  { time: 3800, action: () => {
+    document.getElementById('integratedLabel').classList.add('visible');
+  }},
+  // 5s - Step 1: Research
+  { time: 5000, action: () => {
+    document.getElementById('step1').classList.add('active');
+    animateBullets('step1', 200);
+  }},
+  // 7s - Arrow 1 + Step 2: Create
+  { time: 7000, action: () => {
+    document.getElementById('arrow1').classList.add('visible');
+  }},
+  { time: 7500, action: () => {
+    document.getElementById('step2').classList.add('active');
+    animateBullets('step2', 200);
+    document.getElementById('bracketMarketing').classList.add('visible');
+  }},
+  // 9.5s - Arrow 2 + Step 3: Optimize
+  { time: 9500, action: () => {
+    document.getElementById('arrow2').classList.add('visible');
+  }},
+  { time: 10000, action: () => {
+    document.getElementById('step3').classList.add('active');
+    animateBullets('step3', 200);
+  }},
+  // 12s - Arrow 3 + Step 4: Engage
+  { time: 12000, action: () => {
+    document.getElementById('arrow3').classList.add('visible');
+  }},
+  { time: 12500, action: () => {
+    document.getElementById('step4').classList.add('active');
+    animateBullets('step4', 200);
+    document.getElementById('bracketSales').classList.add('visible');
+  }},
+  // 14.5s - Arrow 4 + Step 5: Convert
+  { time: 14500, action: () => {
+    document.getElementById('arrow4').classList.add('visible');
+  }},
+  { time: 15000, action: () => {
+    document.getElementById('step5').classList.add('active');
+    animateBullets('step5', 200);
+  }},
+  // 17s - All glow + feedback loop
+  { time: 17000, action: () => {
+    document.querySelectorAll('.step').forEach(s => s.classList.add('all-glow'));
+    document.getElementById('feedbackLoop').classList.add('visible');
+  }},
+  // 19s - Final text
+  { time: 19000, action: () => {
+    document.getElementById('finalText').classList.add('visible');
+    document.getElementById('lumiLogo').classList.add('visible');
+  }},
+];
+
+function animateBullets(stepId, stagger) {
+  const bullets = document.querySelectorAll(`#${stepId} .bullet`);
+  bullets.forEach((b, i) => {
+    setTimeout(() => b.classList.add('visible'), i * stagger);
+  });
+}
+
+// Run timeline
+timeline.forEach(({ time, action }) => setTimeout(action, time));
+
+// ── Click to restart ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'r' || e.key === 'R') location.reload();
+});
+</script>
+
+</body>
+</html>

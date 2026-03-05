@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CAC Arbitrage — Lumi</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0D1233;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+  }
+
+  .title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    margin-bottom: 12px;
+  }
+
+  .headline {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    color: #FFFFFF;
+    margin-bottom: 80px;
+    letter-spacing: -0.01em;
+  }
+  .headline span {
+    font-style: italic;
+    color: #CADCFC;
+  }
+
+  .numbers {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+  }
+
+  .metric {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .amount {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .amount-small {
+    font-size: 120px;
+    color: #94A3B8;
+  }
+
+  .amount-big {
+    font-size: 120px;
+    color: #FFFFFF;
+    text-shadow: 0 0 60px rgba(202, 220, 252, 0.15);
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 400;
+    color: #64748B;
+    margin-top: 16px;
+    letter-spacing: 0.04em;
+  }
+
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .arrow-line {
+    width: 120px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(148,163,184,0.1), rgba(202,220,252,0.4), rgba(148,163,184,0.1));
+    position: relative;
+  }
+
+  .arrow-line::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 7px solid rgba(202, 220, 252, 0.4);
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+
+  .ratio {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #CADCFC;
+    letter-spacing: 0.08em;
+    padding: 6px 16px;
+    border: 1px solid rgba(202, 220, 252, 0.15);
+    border-radius: 20px;
+    background: rgba(202, 220, 252, 0.04);
+  }
+
+  .stats {
+    margin-top: 72px;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .stat {
+    font-size: 13px;
+    color: #64748B;
+    letter-spacing: 0.02em;
+  }
+
+  .stat strong {
+    color: #94A3B8;
+    font-weight: 600;
+  }
+
+  .divider {
+    width: 1px;
+    height: 14px;
+    background: rgba(100, 116, 139, 0.3);
+  }
+
+  .tag {
+    position: absolute;
+    bottom: 8%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #CADCFC;
+    padding: 8px 24px;
+    border: 1px solid rgba(202, 220, 252, 0.12);
+    border-radius: 30px;
+    background: rgba(202, 220, 252, 0.03);
+  }
+</style>
+</head>
+<body>
+
+  <div class="title">3 weeks · Real campaigns · Real audiences</div>
+  <div class="headline">Here is <span>the potential.</span></div>
+
+  <div class="numbers">
+    <div class="metric">
+      <div class="amount amount-small">$0.20</div>
+      <div class="label">cost per lead</div>
+    </div>
+
+    <div class="arrow">
+      <div class="ratio">2,500x</div>
+      <div class="arrow-line"></div>
+    </div>
+
+    <div class="metric">
+      <div class="amount amount-big">$500</div>
+      <div class="label">commission per sale</div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><strong>380</strong> leads generated</div>
+    <div class="divider"></div>
+    <div class="stat"><strong>3</strong> weeks</div>
+    <div class="divider"></div>
+    <div class="stat"><strong>$76</strong> total ad spend</div>
+  </div>
+
+  <div class="tag">CAC Arbitrage</div>
+
+</body>
+</html>

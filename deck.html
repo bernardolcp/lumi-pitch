@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumi Pitch Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+
+  :root {
+    --navy-deep: #0D1233;
+    --navy: #1E2761;
+    --navy-card: #151B45;
+    --ice: #CADCFC;
+    --ice-dim: rgba(202,220,252,0.15);
+    --white: #FFFFFF;
+    --gray: #94A3B8;
+    --dim: #64748B;
+    --green: #10B981;
+    --wa-green: #25D366;
+    --gold: #E5A220;
+    --red-bar: #7C2D12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { font-size: 20px; }
+
+  body {
+    background: #000;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── Slide system ── */
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  .slide-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+  .slide-nav:hover { opacity: 1; }
+  .slide-nav .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--dim);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .slide-nav .dot.active {
+    background: var(--ice);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* ── Backgrounds ── */
+  .bg-deep { background: var(--navy-deep); }
+  .bg-navy { background: var(--navy); }
+  .bg-black { background: #0A0A0A; }
+
+  /* ── Typography ── */
+  .serif { font-family: 'Instrument Serif', serif; }
+  .sans { font-family: 'DM Sans', sans-serif; }
+  .ice { color: var(--ice); }
+  .gray { color: var(--gray); }
+  .dim { color: var(--dim); }
+  .gold { color: var(--gold); }
+  .italic { font-style: italic; }
+  .bold { font-weight: 700; }
+  .upper { text-transform: uppercase; letter-spacing: 0.1em; }
+  .center { text-align: center; }
+
+  /* ── Utilities ── */
+  .pad { padding: 0 8vw; }
+  .gap-sm { gap: 8px; }
+  .gap-md { gap: 16px; }
+  .gap-lg { gap: 32px; }
+  .gap-xl { gap: 48px; }
+  .flex { display: flex; }
+  .flex-col { flex-direction: column; }
+  .items-center { align-items: center; }
+  .justify-center { justify-content: center; }
+  .justify-between { justify-content: space-between; }
+  .relative { position: relative; }
+
+  .line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--ice), transparent);
+    border-radius: 1px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ice);
+    padding: 6px 20px;
+    border: 1px solid var(--ice-dim);
+    border-radius: 24px;
+    background: rgba(202,220,252,0.04);
+  }
+
+  .lumi-watermark {
+    position: absolute;
+    bottom: 32px;
+    right: 48px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    color: var(--ice);
+    opacity: 0.25;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 1 — Title
+     ═══════════════════════════════════════ */
+  #s1 {
+    background: var(--navy-deep);
+  }
+  #s1 .orb {
+    position: absolute;
+    top: -15%; right: -5%;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,39,97,0.8) 0%, transparent 70%);
+  }
+  #s1 .logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 80px;
+    color: var(--ice);
+    line-height: 1;
+  }
+  #s1 .subtitle {
+    font-size: 28px;
+    color: var(--white);
+    line-height: 1.5;
+    margin-top: 8px;
+  }
+  #s1 .meta {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--ice);
+    display: inline-flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  #s1 .meta span {
+    font-size: 14px;
+    color: var(--gray);
+    letter-spacing: 0.02em;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 2 — Thesis (line 1 only)
+     ═══════════════════════════════════════ */
+  #s2 {
+    background: #0A0A0A;
+  }
+  #s2 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.3;
+    max-width: 900px;
+  }
+  #s2 .divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(148,163,184,0.15);
+    margin-top: 80px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 3 — Thesis (revealed)
+     ═══════════════════════════════════════ */
+  #s3 {
+    background: #0A0A0A;
+  }
+  #s3 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 44px;
+    font-weight: 400;
+    line-height: 1.35;
+    max-width: 950px;
+  }
+  #s3 .reveal {
+    color: var(--ice);
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 4 — Meet Maria
+     ═══════════════════════════════════════ */
+  #s4 {
+    flex-direction: row;
+    background: #0A0A0A;
+  }
+  #s4 .left {
+    width: 45%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 6vw;
+  }
+  #s4 .left h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    font-weight: 400;
+  }
+  #s4 .right {
+    width: 55%;
+    height: 100%;
+    background: url('slides/maria-office.png') center center / cover no-repeat;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 5 — Maria is not alone (mosaic)
+     ═══════════════════════════════════════ */
+  #s5 {
+    background: url('slides/slide-05.png') center center / cover no-repeat;
+    justify-content: center;
+    align-items: center;
+  }
+  #s5 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    text-shadow: 0 4px 40px rgba(0,0,0,0.8);
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 6 — Market Data
+     ═══════════════════════════════════════ */
+  #s6 { background: var(--navy-deep); }
+
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .data-card {
+    text-align: center;
+  }
+  .data-card .number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 48px;
+    color: var(--ice);
+    line-height: 1.1;
+  }
+  .data-card .label {
+    font-size: 14px;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+
+  #s6 .bottom-text {
+    max-width: 800px;
+    margin: 48px auto 0;
+    text-align: center;
+    border-top: 1px solid rgba(148,163,184,0.1);
+    padding-top: 32px;
+  }
+  #s6 .bottom-text .main-line {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 22px;
+    color: var(--white);
+  }
+  #s6 .bottom-text .sub-line {
+    font-size: 15px;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 7 — Maria's new team (dinner)
+     ═══════════════════════════════════════ */
+  #s7 {
+    flex-direction: row;
+    background: #0A0A0A;
+  }
+  #s7 .image-side {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  #s7 .image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  #s7 .text-side {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5vw;
+    background: #0A0A0A;
+  }
+  #s7 .text-side h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 8 — The Engine (5 steps)
+     ═══════════════════════════════════════ */
+  #s8 { background: var(--navy-deep); }
+
+  .engine-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .engine-header .pre {
+    font-size: 12px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+  }
+  .engine-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--white);
+  }
+
+  .engine-steps {
+    display: flex;
+    gap: 16px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;
+  }
+
+  .engine-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .step-node {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: rgba(202,220,252,0.06);
+    border: 1px solid rgba(202,220,252,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    position: relative;
+  }
+  .step-node::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 18px;
+    background: radial-gradient(circle, rgba(202,220,252,0.08), transparent);
+    z-index: -1;
+  }
+
+  .step-num {
+    font-size: 10px;
+    color: var(--dim);
+    letter-spacing: 0.15em;
+    margin-top: 10px;
+  }
+
+  .step-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+
+  .step-bullets {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .step-bullet {
+    font-size: 11.5px;
+    color: var(--gray);
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: rgba(202,220,252,0.03);
+    border: 1px solid rgba(202,220,252,0.05);
+    text-align: center;
+  }
+  .step-bullet.wa {
+    color: var(--wa-green);
+    border-color: rgba(37,211,102,0.12);
+    background: rgba(37,211,102,0.03);
+  }
+
+  .step-arrow {
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    color: rgba(202,220,252,0.2);
+    font-size: 18px;
+    flex-shrink: 0;
+    width: 24px;
+    justify-content: center;
+  }
+
+  .engine-labels {
+    display: flex;
+    justify-content: center;
+    gap: 80px;
+    margin-top: 32px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 9 — What her team does (mockups)
+     ═══════════════════════════════════════ */
+  #s9 { background: #0A0A0A; }
+  #s9 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 42px;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+  .mockups {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .mockup-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .mockup-frame {
+    width: 100%;
+    aspect-ratio: 9/16;
+    max-height: 420px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(202,220,252,0.08);
+    background: var(--navy-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mockup-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .mockup-label {
+    font-size: 13px;
+    color: var(--gray);
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 10 — CAC Arbitrage
+     ═══════════════════════════════════════ */
+  #s10 { background: var(--navy-deep); }
+
+  .cac-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .cac-header .pre {
+    font-size: 16px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  .cac-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 40px;
+    font-style: italic;
+    color: var(--white);
+    margin-top: 8px;
+  }
+
+  .cac-numbers {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 60px;
+  }
+  .cac-metric {
+    text-align: center;
+  }
+  .cac-metric .amount {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 150px;
+    line-height: 1;
+  }
+  .cac-metric .amount.small { color: var(--gray); }
+  .cac-metric .amount.big {
+    color: var(--white);
+    text-shadow: 0 0 60px rgba(202,220,252,0.1);
+  }
+  .cac-metric .desc {
+    font-size: 18px;
+    color: var(--dim);
+    margin-top: 16px;
+  }
+
+  .cac-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .cac-ratio {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ice);
+    padding: 6px 18px;
+    border: 1px solid var(--ice-dim);
+    border-radius: 20px;
+    background: rgba(202,220,252,0.04);
+  }
+  .cac-line {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(148,163,184,0.05), var(--ice-dim), rgba(148,163,184,0.05));
+    position: relative;
+  }
+  .cac-line::after {
+    content: '→';
+    position: absolute;
+    right: -14px;
+    top: -9px;
+    color: rgba(202,220,252,0.3);
+    font-size: 16px;
+  }
+
+  .cac-stats {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-top: 48px;
+    font-size: 17px;
+    color: var(--dim);
+  }
+  .cac-stats strong {
+    color: var(--gray);
+    font-weight: 600;
+  }
+  .cac-stats .sep {
+    color: rgba(100,116,139,0.3);
+  }
+
+  .cac-tag {
+    text-align: center;
+    margin-top: 40px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 11 — Business Model
+     ═══════════════════════════════════════ */
+  #s11 { background: #0A0A0A; }
+
+  .biz-top {
+    display: flex;
+    gap: 80px;
+    margin-bottom: 40px;
+  }
+  .biz-left { flex: 1; }
+  .biz-right { flex: 1; }
+
+  .biz-left h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 38px;
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+  .biz-left h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--ice);
+    margin-bottom: 8px;
+  }
+  .biz-left p {
+    font-size: 14px;
+    color: var(--gray);
+    line-height: 1.6;
+  }
+
+  .cac-bars h4 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .bar {
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .bar.traditional {
+    width: 100%;
+    background: var(--red-bar);
+  }
+  .bar.lumi-bar {
+    width: 35%;
+    background: var(--ice);
+    color: var(--navy-deep);
+    font-weight: 700;
+  }
+  .bar-label {
+    font-size: 12px;
+    color: var(--gray);
+  }
+
+  .divider-line {
+    height: 1px;
+    background: rgba(148,163,184,0.1);
+    margin: 32px 0;
+  }
+
+  .verticals h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    margin-bottom: 6px;
+  }
+  .verticals p {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 20px;
+  }
+  .vertical-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px 40px;
+  }
+  .vertical-item {
+    font-size: 15px;
+    color: var(--ice);
+    font-weight: 600;
+  }
+  .biz-footnote {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(148,163,184,0.08);
+    font-size: 12px;
+    color: var(--dim);
+    font-style: italic;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 12 — Team
+     ═══════════════════════════════════════ */
+  #s12 { background: #0A0A0A; }
+
+  .team-header h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 40px;
+    font-weight: 400;
+  }
+  .team-header .sub {
+    font-size: 14px;
+    color: var(--gray);
+    margin-top: 4px;
+  }
+
+  .team-grid {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+    max-width: 1200px;
+  }
+  .team-card {
+    flex: 1;
+    background: var(--navy-card);
+    border-radius: 16px;
+    padding: 32px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border: 1px solid rgba(202,220,252,0.06);
+  }
+  .team-avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--ice);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--ice);
+    background: rgba(202,220,252,0.05);
+  }
+  .team-card .name {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    margin-top: 16px;
+  }
+  .team-card .role {
+    font-size: 12px;
+    color: var(--ice);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-top: 4px;
+  }
+  .team-card .bio {
+    font-size: 12px;
+    color: var(--gray);
+    line-height: 1.6;
+    margin-top: 16px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 13 — The Ask
+     ═══════════════════════════════════════ */
+  #s13 {
+    background: var(--navy-deep);
+    align-items: center;
+    text-align: center;
+  }
+  #s13 .ask-content {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  #s13 .ask-label {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 16px;
+  }
+  #s13 .ask-amount {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 96px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 80px rgba(202,220,252,0.12);
+  }
+  #s13 .ask-round {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    color: var(--gray);
+    margin-top: 8px;
+    margin-bottom: 48px;
+  }
+  #s13 .ask-uses {
+    display: flex;
+    gap: 40px;
+    margin-bottom: 56px;
+  }
+  #s13 .ask-use {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  #s13 .ask-use-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: rgba(202,220,252,0.06);
+    border: 1px solid rgba(202,220,252,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--ice);
+    margin-bottom: 4px;
+  }
+  #s13 .ask-use-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+  }
+  #s13 .ask-use-sub {
+    font-size: 12px;
+    color: var(--dim);
+  }
+  #s13 .ask-divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(202,220,252,0.15), transparent);
+    margin-bottom: 48px;
+  }
+  #s13 .ask-punchline {
+    font-family: 'Instrument Serif', serif;
+    font-size: 36px;
+    color: var(--white);
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  #s13 .ask-punchline em {
+    font-style: italic;
+    color: var(--ice);
+  }
+
+  /* ── Keyboard nav ── */
+  .slide { scroll-snap-align: start; }
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- ═══ SLIDE 2 — Thesis line 1 ═══ -->
+<div class="slide bg-black" id="s2">
+  <div class="pad">
+    <h1>The big bet right now is AI for enterprise in US.</h1>
+    <div class="divider"></div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 3 — Thesis revealed ═══ -->
+<div class="slide bg-black" id="s3">
+  <div class="pad">
+    <h1>The big bet right now is AI for enterprise in US.
+      <span class="reveal">Ours is AI for 22 million Brazilian businesses that still sell on WhatsApp and willpower.</span>
+    </h1>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 4 — Meet Maria ═══ -->
+<div class="slide" id="s4">
+  <div class="left">
+    <h1>meet Maria...</h1>
+  </div>
+  <div class="right"></div>
+</div>
+
+<!-- ═══ SLIDE 5 — Maria is not alone ═══ -->
+<div class="slide" id="s5"></div>
+
+
+<!-- ═══ SLIDE 7 — Maria's new team ═══ -->
+<div class="slide" id="s7">
+  <div class="image-side">
+    <img src="slides/maria-dinner-notification.png" alt="Maria having dinner with her son">
+  </div>
+  <div class="text-side">
+    <h1>introducing<br>Maria her new<br>team</h1>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 8 — The Engine (animated) ═══ -->
+<div class="slide bg-deep" id="s8" style="padding:0;">
+  <iframe id="engineFrame" src="about:blank" data-src="engine-animation.html"
+    style="width:100%;height:100%;border:none;pointer-events:none;"
+    allowtransparency="true"></iframe>
+</div>
+
+<!-- ═══ SLIDE 9 — What her team does ═══ -->
+<div class="slide bg-black" id="s9">
+  <div class="pad">
+    <h1>What her new team does.</h1>
+    <div class="mockups">
+      <div class="mockup-card">
+        <div class="mockup-frame" style="padding:0;">
+          <video src="slides/ugc-video.mov" autoplay muted loop playsinline
+            style="width:100%;height:100%;object-fit:cover;border-radius:16px;"></video>
+        </div>
+        <div class="mockup-label">AI-generated UGC content</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-frame" style="background:linear-gradient(180deg, #075E54 0%, #ECE5DD 15%);">
+          <div style="padding:16px; width:100%; font-size:12px;">
+            <div style="background:#075E54; color:white; padding:12px; border-radius:8px 8px 0 0; display:flex; align-items:center; gap:8px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;">A</div>
+              <div><strong>Lumi</strong><br><span style="font-size:10px;opacity:0.7;">online</span></div>
+            </div>
+            <div style="background:#ECE5DD; padding:12px; flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:11px; color:#333; max-width:85%;">Made something special for your new neighborhood! ✨</div>
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:11px; color:#333; max-width:85%;">🎙 "Welcome to Vila Madalena! Great restaurants, parks..."</div>
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:11px; color:#333; max-width:85%;">📍 Neighborhood Map: Vila Madalena · 8 spots</div>
+              <div style="background:#DCF8C6; padding:8px 10px; border-radius:8px 0 8px 8px; font-size:11px; color:#333; max-width:80%; align-self:flex-end;">Wow, nobody's ever done this! 😍</div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-label">Sends audio, maps, checklists</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-frame" style="background:linear-gradient(180deg, #128C7E 0%, #075E54 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+          <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:700;margin-bottom:12px;">A</div>
+          <div style="font-size:16px;font-weight:600;">Lumi</div>
+          <div style="font-size:12px;opacity:0.7;margin-top:4px;">Call in progress · 02:34</div>
+          <div style="background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:12px;font-size:10px;margin-top:8px;">🤖 AI Specialist</div>
+          <div style="background:rgba(0,0,0,0.2);border-radius:12px;padding:12px;margin-top:16px;width:100%;">
+            <div style="font-size:9px;text-transform:uppercase;letter-spacing:0.1em;opacity:0.5;margin-bottom:6px;">Live transcript</div>
+            <div style="font-size:11px;line-height:1.5;">"Hi Maria, I found the best rate for you. Porto Seguro, $189/mo, approved in 24h."</div>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:20px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;">🔇</div>
+            <div style="width:52px;height:52px;border-radius:50%;background:#EF4444;display:flex;align-items:center;justify-content:center;">📞</div>
+            <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;">↩</div>
+          </div>
+          <div style="font-size:10px;opacity:0.4;margin-top:12px;">23:08 · Rental Insurance · Lead #47</div>
+        </div>
+        <div class="mockup-label">Calls the client. AI voice.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 10 — CAC Arbitrage ═══ -->
+<div class="slide bg-deep" id="s10">
+  <div class="pad">
+    <div class="cac-header">
+      <div class="pre">3 weeks · Real campaigns · Real audiences</div>
+      <h2>Here is the potential.</h2>
+    </div>
+    <div class="cac-numbers">
+      <div class="cac-metric">
+        <div class="amount small">$0.20</div>
+        <div class="desc">cost per lead</div>
+      </div>
+      <div class="cac-arrow">
+        <div class="cac-ratio">2,500x</div>
+        <div class="cac-line"></div>
+      </div>
+      <div class="cac-metric">
+        <div class="amount big">$500</div>
+        <div class="desc">commission per sale</div>
+      </div>
+    </div>
+    <div class="cac-stats">
+      <span><strong>380</strong> leads generated</span>
+      <span class="sep">|</span>
+      <span><strong>3</strong> weeks</span>
+      <span class="sep">|</span>
+      <span><strong>$76</strong> total ad spend</span>
+    </div>
+    <div class="cac-tag">
+      <span class="tag">CAC Arbitrage</span>
+    </div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 11 — Business Model Evolution ═══ -->
+<div class="slide bg-deep" id="s11">
+  <div class="pad">
+    <div style="text-align:center; margin-bottom:48px;">
+      <div style="font-size:14px; color:var(--gray); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:8px;">How we win</div>
+      <h1 style="font-family:'Instrument Serif',serif; font-size:42px; font-weight:400;">Win on distribution. <span class="ice italic">Then own the relationship.</span></h1>
+    </div>
+
+    <div style="display:flex; gap:24px; max-width:1200px; margin:0 auto;">
+
+      <!-- Phase 1 -->
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.1); border-radius:20px; padding:36px 28px; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--ice);"></div>
+        <div style="font-size:11px; color:var(--ice); text-transform:uppercase; letter-spacing:0.12em; font-weight:600;">Phase 1 · Now</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:28px; color:var(--white); margin-top:12px; line-height:1.2;">Third-party<br>seller</div>
+        <div style="font-size:14px; color:var(--gray); margin-top:16px; line-height:1.7;">
+          Commission only<br>
+          Zero risk for the SMB<br>
+          New channel, new revenue<br>
+          <span style="color:var(--ice); font-weight:600;">We sell. They earn.</span>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(202,220,252,0.08);">
+          <div style="font-size:12px; color:var(--dim);">Revenue model</div>
+          <div style="font-size:18px; color:var(--white); font-weight:600; margin-top:4px;">100% commission</div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex; align-items:center; color:rgba(202,220,252,0.25); font-size:24px;">→</div>
+
+      <!-- Phase 2 -->
+      <div style="flex:1; background:rgba(202,220,252,0.02); border:1px solid rgba(202,220,252,0.06); border-radius:20px; padding:36px 28px; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:rgba(202,220,252,0.3);"></div>
+        <div style="font-size:11px; color:var(--gray); text-transform:uppercase; letter-spacing:0.12em; font-weight:600;">Phase 2 · Scale</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:28px; color:var(--white); margin-top:12px; line-height:1.2;">Fee +<br>commission</div>
+        <div style="font-size:14px; color:var(--gray); margin-top:16px; line-height:1.7;">
+          Proven ROI unlocks monthly fee<br>
+          Commission on top<br>
+          Risk shifts to shared<br>
+          <span style="color:var(--ice); font-weight:600;">We're embedded. They depend.</span>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(202,220,252,0.08);">
+          <div style="font-size:12px; color:var(--dim);">Revenue model</div>
+          <div style="font-size:18px; color:var(--white); font-weight:600; margin-top:4px;">SaaS fee + commission</div>
+        </div>
+      </div>
+
+      <!-- Arrow -->
+      <div style="display:flex; align-items:center; color:rgba(202,220,252,0.25); font-size:24px;">→</div>
+
+      <!-- Phase 3 -->
+      <div style="flex:1; background:rgba(202,220,252,0.02); border:1px solid rgba(202,220,252,0.06); border-radius:20px; padding:36px 28px; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:rgba(202,220,252,0.15);"></div>
+        <div style="font-size:11px; color:var(--dim); text-transform:uppercase; letter-spacing:0.12em; font-weight:600;">Phase 3 · Endgame</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:28px; color:var(--white); margin-top:12px; line-height:1.2;">Service as<br>a software</div>
+        <div style="font-size:14px; color:var(--gray); margin-top:16px; line-height:1.7;">
+          Full platform access<br>
+          SMB self-serves on top of engine<br>
+          Predictable recurring revenue<br>
+          <span style="color:var(--ice); font-weight:600;">We're infrastructure. They scale.</span>
+        </div>
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid rgba(202,220,252,0.08);">
+          <div style="font-size:12px; color:var(--dim);">Revenue model</div>
+          <div style="font-size:18px; color:var(--white); font-weight:600; margin-top:4px;">Platform subscription</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <div style="font-family:'Instrument Serif',serif; font-style:italic; font-size:20px; color:var(--gray);">Start with all the risk. Earn the right to charge.</div>
+    </div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 12 — Team ═══ -->
+<div class="slide bg-black" id="s12">
+  <div class="pad">
+    <div class="team-header">
+      <h1>The Team</h1>
+      <div class="sub">5 people · 4 continents · Stanford GSB</div>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="team-avatar">A</div>
+        <div class="name">Anni</div>
+        <div class="role">Strategy</div>
+        <div class="bio">BCG + AI<br>Consulting + analytics<br>Strategic frameworks</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">E</div>
+        <div class="name">Elisa</div>
+        <div class="role">Engineering + Venture</div>
+        <div class="bio">UniAngels (350+ angels)<br>Stanford Digital Economy Lab<br>Engineering + Venture</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">M</div>
+        <div class="name">Martin</div>
+        <div class="role">Product</div>
+        <div class="bio">Proptech founder<br>Real estate + tech<br>Product-market fit</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">B</div>
+        <div class="name">Bernardo</div>
+        <div class="role">GTM</div>
+        <div class="bio">Doctor → Edtech → Afya<br>Healthcare + scale<br>GTM execution</div>
+      </div>
+      <div class="team-card">
+        <div class="team-avatar">M</div>
+        <div class="name">Megumi</div>
+        <div class="role">Operations</div>
+        <div class="bio">EY<br>Strategy and execution<br>professional</div>
+      </div>
+    </div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 13 — The Ask ═══ -->
+<div class="slide" id="s13">
+  <div class="ask-content">
+    <div class="ask-label">Seed Round</div>
+    <div class="ask-amount">$3M</div>
+    <div class="ask-round">$20M valuation · SAFE</div>
+
+    <div class="ask-uses">
+      <div class="ask-use">
+        <div class="ask-use-icon">&lt;/&gt;</div>
+        <div class="ask-use-title">Engineering</div>
+        <div class="ask-use-sub">AI engine & platform</div>
+      </div>
+      <div class="ask-use">
+        <div class="ask-use-icon">&#9678;</div>
+        <div class="ask-use-title">Go-to-Market</div>
+        <div class="ask-use-sub">First 50 clients in SP</div>
+      </div>
+      <div class="ask-use">
+        <div class="ask-use-icon">&#8599;</div>
+        <div class="ask-use-title">New Verticals</div>
+        <div class="ask-use-sub">Beyond insurance</div>
+      </div>
+    </div>
+
+    <div class="ask-divider"></div>
+
+    <div class="ask-punchline">We are <em>the distribution.</em></div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- Navigation dots -->
+<div class="slide-nav" id="nav"></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const nav = document.getElementById('nav');
+
+// Build dots
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+  nav.appendChild(dot);
+});
+
+// Update active dot on scroll + trigger engine animation
+const engineFrame = document.getElementById('engineFrame');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = [...slides].indexOf(entry.target);
+      nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      // Reload engine animation each time slide 8 comes into view
+      if (entry.target.id === 's8' && engineFrame) {
+        engineFrame.src = engineFrame.dataset.src + '?t=' + Date.now();
+      }
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(s => observer.observe(s));
+
+// Keyboard navigation
+let current = 0;
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    current = Math.min(current + 1, slides.length - 1);
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    current = Math.max(current - 1, 0);
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+
+</body>
+</html>
