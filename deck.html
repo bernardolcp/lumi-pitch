@@ -492,99 +492,111 @@
      ═══════════════════════════════════════ */
   #s10 { background: var(--navy-deep); }
 
-  .cac-header {
+  .funnel-header {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
   }
-  .cac-header .pre {
-    font-size: 24px;
+  .funnel-header .pre {
+    font-size: 18px;
     color: var(--gray);
     text-transform: uppercase;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
   }
-  .cac-header h2 {
+  .funnel-header h2 {
     font-family: 'Instrument Serif', serif;
-    font-size: 60px;
+    font-size: 56px;
     font-style: italic;
     color: var(--white);
     margin-top: 8px;
   }
-
-  .cac-numbers {
+  .funnel-cards {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 60px;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: stretch;
   }
-  .cac-metric {
-    text-align: center;
-  }
-  .cac-metric .amount {
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 700;
-    font-size: 202px;
-    line-height: 1;
-  }
-  .cac-metric .amount.small { color: var(--gray); }
-  .cac-metric .amount.big {
-    color: var(--white);
-    text-shadow: 0 0 60px rgba(202,220,252,0.1);
-  }
-  .cac-metric .desc {
-    font-size: 27px;
-    color: var(--dim);
-    margin-top: 16px;
-  }
-
-  .cac-arrow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-  .cac-ratio {
-    font-size: 21px;
-    font-weight: 600;
-    color: var(--ice);
-    padding: 6px 18px;
-    border: 1px solid var(--ice-dim);
-    border-radius: 20px;
-    background: rgba(202,220,252,0.04);
-  }
-  .cac-line {
-    width: 100px;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(148,163,184,0.05), var(--ice-dim), rgba(148,163,184,0.05));
+  .funnel-card {
+    flex: 1;
+    background: rgba(202,220,252,0.03);
+    border: 1px solid rgba(202,220,252,0.08);
+    border-radius: 16px;
+    padding: 28px 24px;
     position: relative;
   }
-  .cac-line::after {
-    content: '→';
-    position: absolute;
-    right: -14px;
-    top: -9px;
-    color: rgba(202,220,252,0.3);
-    font-size: 24px;
+  .funnel-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
   }
-
-  .cac-stats {
-    display: flex;
-    gap: 48px;
-    justify-content: center;
-    margin-top: 48px;
-    font-size: 25px;
+  .funnel-badge.proved {
+    color: var(--green);
+    border: 1px solid rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.08);
+  }
+  .funnel-badge.next {
+    color: var(--gold);
+    border: 1px solid rgba(229,162,32,0.25);
+    background: rgba(229,162,32,0.08);
+  }
+  .funnel-num {
+    font-size: 14px;
     color: var(--dim);
+    margin-bottom: 6px;
   }
-  .cac-stats strong {
+  .funnel-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .funnel-detail {
+    font-size: 16px;
     color: var(--gray);
+    line-height: 1.6;
+  }
+  .funnel-detail strong {
+    color: var(--white);
     font-weight: 600;
   }
-  .cac-stats .sep {
-    color: rgba(100,116,139,0.3);
+  .funnel-arrow {
+    display: flex;
+    align-items: center;
+    color: rgba(202,220,252,0.2);
+    font-size: 22px;
+    flex-shrink: 0;
   }
-
-  .cac-tag {
+  .funnel-bottom {
+    max-width: 900px;
+    margin: 36px auto 0;
     text-align: center;
-    margin-top: 40px;
+    font-size: 18px;
+    color: var(--gray);
+    line-height: 1.7;
+  }
+  .funnel-bottom strong {
+    color: var(--white);
+  }
+  .funnel-milestone {
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+  }
+  .funnel-tag {
+    text-align: center;
+    margin-top: 16px;
   }
 
   /* ═══════════════════════════════════════
@@ -947,36 +959,64 @@
 <!-- ═══ SLIDE 10 — CAC Arbitrage ═══ -->
 <div class="slide bg-deep" id="s10">
   <div class="pad">
-    <div class="cac-header">
+    <div class="funnel-header">
       <div class="pre">3 weeks · Real campaigns · Real audiences</div>
-      <h2>Here is the potential.</h2>
+      <h2>We proved the top. Now we close the bottom.</h2>
     </div>
-    <div class="cac-numbers">
-      <div class="cac-metric">
-        <div class="amount small">$0.45</div>
-        <div class="desc">cost per lead</div>
+
+    <div class="funnel-cards">
+      <div class="funnel-card">
+        <div class="funnel-badge proved">&#10003; Proved</div>
+        <div class="funnel-num">01</div>
+        <div class="funnel-title">Generate demand</div>
+        <div class="funnel-detail">
+          <strong>336</strong> leads generated<br>
+          <strong>$150</strong> total ad spend<br>
+          <strong>$0.45</strong> cost per lead
+        </div>
       </div>
-      <div class="cac-arrow">
-        <div class="cac-ratio">~440x</div>
-        <div class="cac-line"></div>
+
+      <div class="funnel-arrow">→</div>
+
+      <div class="funnel-card">
+        <div class="funnel-badge proved">&#10003; Proved</div>
+        <div class="funnel-num">02</div>
+        <div class="funnel-title">Capture data &amp; interest</div>
+        <div class="funnel-detail">
+          People click, fill forms,<br>share real intent
+        </div>
       </div>
-      <div class="cac-metric">
-        <div class="amount big">$200</div>
-        <div class="desc">commission per sale</div>
+
+      <div class="funnel-arrow">→</div>
+
+      <div class="funnel-card">
+        <div class="funnel-badge proved">&#10003; Proved</div>
+        <div class="funnel-num">03</div>
+        <div class="funnel-title">Engage on WhatsApp</div>
+        <div class="funnel-detail">
+          AI responds in <strong>&lt;60 seconds</strong><br>
+          Qualifies &amp; quotes
+        </div>
+      </div>
+
+      <div class="funnel-arrow">→</div>
+
+      <div class="funnel-card">
+        <div class="funnel-badge next">&#8599; Next</div>
+        <div class="funnel-num">04</div>
+        <div class="funnel-title">Convert to paying customer</div>
+        <div class="funnel-detail">
+          Industry avg: <strong>3–5%</strong><br>
+          At 2%: CAC = <strong>$22</strong><br>
+          Commission: <strong>$200</strong>
+        </div>
       </div>
     </div>
-    <div class="cac-stats">
-      <span><strong>336</strong> leads generated</span>
-      <span class="sep">|</span>
-      <span><strong>$150</strong> total ad spend</span>
-      <span class="sep">|</span>
-      <span><strong>2</strong> quotes sent · No sales yet</span>
-    </div>
-    <div style="max-width:800px; margin:32px auto 0; text-align:center; font-size:21px; color:var(--gray); line-height:1.7;">
-      Even at <strong style="color:var(--white);">0.5% conversion</strong> — well below the <strong style="color:var(--ice);">3–5% industry average</strong> for insurance leads — our CAC would be <strong style="color:var(--white);">$90</strong>. That's <strong style="color:var(--ice);">45% of a $200 commission</strong>.
-    </div>
-    <div class="cac-tag">
-      <span class="tag">CAC Arbitrage</span>
+
+    <div class="funnel-milestone">Next milestone → First 10 closed policies</div>
+
+    <div class="funnel-tag">
+      <span class="tag">Funnel validation · Seed stage</span>
     </div>
   </div>
   <div class="lumi-watermark">lumi</div>
