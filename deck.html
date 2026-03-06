@@ -209,24 +209,6 @@
      SLIDE 4 — Meet Maria
      ═══════════════════════════════════════ */
   #s4 {
-    flex-direction: row;
-    background: #0A0A0A;
-  }
-  #s4 .left {
-    width: 45%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 6vw;
-  }
-  #s4 .left h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 78px;
-    font-weight: 400;
-  }
-  #s4 .right {
-    width: 55%;
-    height: 100%;
     background: url('slides/maria-office.png') center center / cover no-repeat;
   }
 
@@ -866,12 +848,7 @@
 </div>
 
 <!-- ═══ SLIDE 4 — Meet Maria ═══ -->
-<div class="slide" id="s4">
-  <div class="left">
-    <h1>meet Maria...</h1>
-  </div>
-  <div class="right"></div>
-</div>
+<div class="slide" id="s4"></div>
 
 <!-- ═══ SLIDE 5 — Maria is not alone ═══ -->
 <div class="slide" id="s5"></div>
@@ -1175,11 +1152,17 @@
 
     </div>
 
-    <div class="ask-divider"></div>
-
-    <div class="ask-punchline">We don't sell AI. <em>We sell acquired customers.</em></div>
+    <div style="display:none;"><!-- punchline moved to own slide --></div>
   </div>
   <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 14 — Punchline ═══ -->
+<div class="slide" id="s14" style="background:#000; align-items:center; justify-content:center; text-align:center;">
+  <div>
+    <div class="punchline-1" style="font-family:'Instrument Serif',serif; font-size:64px; color:var(--white); opacity:0; transform:translateY(20px); transition: all 0.8s ease;">We don't sell AI.</div>
+    <div class="punchline-2" style="font-family:'Instrument Serif',serif; font-size:80px; color:var(--ice); font-style:italic; margin-top:24px; opacity:0; transform:translateY(20px); transition: all 0.8s ease 0.9s;">We sell acquired customers.</div>
+  </div>
 </div>
 
 <!-- Navigation dots -->
@@ -1207,6 +1190,13 @@ const observer = new IntersectionObserver(entries => {
       // Reload engine animation each time slide 8 comes into view
       if (entry.target.id === 's8' && engineFrame) {
         engineFrame.src = engineFrame.dataset.src + '?t=' + Date.now();
+      }
+      // Punchline animation
+      if (entry.target.id === 's14') {
+        const p1 = entry.target.querySelector('.punchline-1');
+        const p2 = entry.target.querySelector('.punchline-2');
+        p1.style.opacity = '1'; p1.style.transform = 'translateY(0)';
+        p2.style.opacity = '1'; p2.style.transform = 'translateY(0)';
       }
     }
   });
