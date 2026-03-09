@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumi Pitch Deck — V2</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+
+  :root {
+    --navy-deep: #000000;
+    --navy: #1E2761;
+    --navy-card: #151B45;
+    --ice: #CADCFC;
+    --ice-dim: rgba(202,220,252,0.15);
+    --white: #FFFFFF;
+    --gray: #94A3B8;
+    --dim: #64748B;
+    --green: #10B981;
+    --wa-green: #25D366;
+    --gold: #E5A220;
+    --red-bar: #7C2D12;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 54px; }
+
+  body {
+    background: #000;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── Slide system ── */
+  .slide {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    scroll-snap-align: start;
+  }
+
+  .slide-nav {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 100;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+  .slide-nav:hover { opacity: 1; }
+  .slide-nav .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--dim);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .slide-nav .dot.active {
+    background: var(--ice);
+    width: 24px;
+    border-radius: 4px;
+  }
+
+  /* ── Utilities ── */
+  .pad { padding: 0 8vw; }
+  .ice { color: var(--ice); }
+  .italic { font-style: italic; }
+
+  .tag {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ice);
+    padding: 6px 20px;
+    border: 1px solid var(--ice-dim);
+    border-radius: 24px;
+    background: rgba(202,220,252,0.04);
+  }
+
+  .lumi-watermark {
+    position: absolute;
+    bottom: 32px;
+    right: 48px;
+    font-family: 'Instrument Serif', serif;
+    font-size: 30px;
+    color: var(--ice);
+    opacity: 0.25;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 1 — Maria (full-screen photo, opens the pitch)
+     ═══════════════════════════════════════ */
+  #s1 {
+    background: url('slides/maria-office.png') center center / cover no-repeat;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 2 — Maria is not alone (mosaic)
+     ═══════════════════════════════════════ */
+  #s2 {
+    background: url('slides/slide-05.png') center center / cover no-repeat;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 3 — Market Data
+     ═══════════════════════════════════════ */
+  #s3 { background: var(--navy-deep); }
+
+  .data-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .data-card { text-align: center; }
+  .data-card .number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 67px;
+    color: var(--ice);
+    line-height: 1.1;
+  }
+  .data-card .label {
+    font-size: 21px;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+  #s3 .bottom-text {
+    max-width: 800px;
+    margin: 48px auto 0;
+    text-align: center;
+    border-top: 1px solid rgba(148,163,184,0.1);
+    padding-top: 32px;
+  }
+  #s3 .bottom-text .main-line {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-size: 33px;
+    color: var(--white);
+  }
+  #s3 .bottom-text .sub-line {
+    font-size: 22px;
+    color: var(--gray);
+    margin-top: 8px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 4 — Contrarian Thesis
+     ═══════════════════════════════════════ */
+  #s4 { background: #0A0A0A; }
+  #s4 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 66px;
+    font-weight: 400;
+    line-height: 1.35;
+  }
+  #s4 .reveal {
+    color: var(--ice);
+    margin-top: 12px;
+    display: block;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 5 — Maria's dinner (Lumi works while she rests)
+     ═══════════════════════════════════════ */
+  #s5 {
+    flex-direction: row;
+    background: #0A0A0A;
+  }
+  #s5 .image-side {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+  #s5 .image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+  #s5 .text-side {
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5vw;
+    background: #0A0A0A;
+  }
+  #s5 .text-side h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 6 — What her team does (mockups) — NOW BEFORE ENGINE
+     ═══════════════════════════════════════ */
+  #s6 { background: #0A0A0A; }
+  #s6 h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+  .mockups {
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .mockup-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .mockup-frame {
+    width: 100%;
+    aspect-ratio: 9/16;
+    max-height: 420px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(202,220,252,0.08);
+    background: var(--navy-card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mockup-label {
+    font-size: 19px;
+    color: var(--gray);
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 7 — CAC Arbitrage / Funnel
+     ═══════════════════════════════════════ */
+  #s7 { background: #000; }
+
+  .funnel-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .funnel-header .pre {
+    font-size: 18px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+  }
+  .funnel-header h2 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    font-style: italic;
+    color: var(--white);
+    margin-top: 8px;
+  }
+  .funnel-cards {
+    display: flex;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: stretch;
+  }
+  .funnel-card {
+    flex: 1;
+    background: rgba(202,220,252,0.03);
+    border: 1px solid rgba(202,220,252,0.08);
+    border-radius: 16px;
+    padding: 28px 24px;
+  }
+  .funnel-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .funnel-badge.proved {
+    color: var(--green);
+    border: 1px solid rgba(16,185,129,0.25);
+    background: rgba(16,185,129,0.08);
+  }
+  .funnel-badge.next {
+    color: var(--gold);
+    border: 1px solid rgba(229,162,32,0.25);
+    background: rgba(229,162,32,0.08);
+  }
+  .funnel-num { font-size: 14px; color: var(--dim); margin-bottom: 6px; }
+  .funnel-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 14px;
+  }
+  .funnel-detail { font-size: 16px; color: var(--gray); line-height: 1.6; }
+  .funnel-detail strong { color: var(--white); font-weight: 600; }
+  .funnel-arrow {
+    display: flex;
+    align-items: center;
+    color: rgba(202,220,252,0.2);
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .funnel-milestone {
+    margin-top: 20px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-align: center;
+  }
+  .funnel-tag { text-align: center; margin-top: 16px; }
+
+  /* ═══════════════════════════════════════
+     SLIDE 9 — Business Model
+     ═══════════════════════════════════════ */
+  #s9 { background: #0A0A0A; }
+
+  /* ═══════════════════════════════════════
+     SLIDE 10 — Team
+     ═══════════════════════════════════════ */
+  #s10 { background: #0A0A0A; }
+
+  /* ═══════════════════════════════════════
+     SLIDE 11 — The Ask
+     ═══════════════════════════════════════ */
+  #s11 {
+    background: #000;
+    align-items: center;
+    text-align: center;
+  }
+  #s11 .ask-content {
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #s11 .ask-label {
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gray);
+    margin-bottom: 16px;
+  }
+  #s11 .ask-amount {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 129px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-shadow: 0 0 80px rgba(202,220,252,0.12);
+  }
+  #s11 .ask-round {
+    font-family: 'Instrument Serif', serif;
+    font-size: 33px;
+    color: var(--gray);
+    margin-top: 8px;
+    margin-bottom: 48px;
+  }
+
+  /* ═══════════════════════════════════════
+     SLIDE 13 — Punchline
+     ═══════════════════════════════════════ */
+  #s13 {
+    background: #000;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ── Keyboard nav ── */
+  .slide { scroll-snap-align: start; }
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- ═══ SLIDE 0 — Black (title card) ═══ -->
+<div class="slide" id="s0" style="background:#000;"></div>
+
+<!-- ═══ SLIDE 1 — Maria (opens the pitch) ═══ -->
+<div class="slide" id="s1"></div>
+
+<!-- ═══ SLIDE 2 — Maria is not alone ═══ -->
+<div class="slide" id="s2" style="background: url('slides/slide-05.png') center center / cover no-repeat; justify-content:center; align-items:center;"></div>
+
+<!-- ═══ SLIDE 6 — What her team does (mockups) ═══ -->
+<div class="slide" id="s6">
+  <div class="pad">
+    <h1>This is what Lumi does for her.</h1>
+    <div class="mockups">
+      <div class="mockup-card">
+        <div class="mockup-frame" style="padding:0;">
+          <video src="slides/ugc-video.mov" autoplay muted loop playsinline
+            style="width:100%;height:100%;object-fit:cover;border-radius:16px;"></video>
+        </div>
+        <div class="mockup-label">AI-generated UGC content</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-frame" style="background:linear-gradient(180deg, #075E54 0%, #ECE5DD 15%);">
+          <div style="padding:16px; width:100%; font-size: 18px;">
+            <div style="background:#075E54; color:white; padding:12px; border-radius:8px 8px 0 0; display:flex; align-items:center; gap:8px;">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--navy);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;">L</div>
+              <div><strong>Lumi</strong><br><span style="font-size:15px;opacity:0.7;">online</span></div>
+            </div>
+            <div style="background:#ECE5DD; padding:12px; flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:16px; color:#333; max-width:85%;">Hi! I found the perfect plan for you.</div>
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:16px; color:#333; max-width:85%;">Porto Seguro, R$189/month. Covers fire, theft, flooding.</div>
+              <div style="background:white; padding:8px 10px; border-radius:0 8px 8px 8px; font-size:16px; color:#333; max-width:85%;">Want me to send the contract link?</div>
+              <div style="background:#DCF8C6; padding:8px 10px; border-radius:8px 0 8px 8px; font-size:16px; color:#333; max-width:80%; align-self:flex-end;">Yes please! That was fast</div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-label">WhatsApp — quotes in seconds</div>
+      </div>
+      <div class="mockup-card">
+        <div class="mockup-frame" style="background:linear-gradient(180deg, #128C7E 0%, #075E54 100%); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px;">
+          <div style="width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:700;margin-bottom:16px;">L</div>
+          <div style="font-size:24px;font-weight:600;">Lumi</div>
+          <div style="font-size:18px;opacity:0.7;margin-top:4px;">Calling · 02:34</div>
+          <div style="background:rgba(255,255,255,0.1);padding:4px 12px;border-radius:12px;font-size:15px;margin-top:8px;">AI Insurance Specialist</div>
+          <div style="display:flex;gap:16px;margin-top:32px;">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;">🔇</div>
+            <div style="width:56px;height:56px;border-radius:50%;background:#EF4444;display:flex;align-items:center;justify-content:center;">📞</div>
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.1);display:flex;align-items:center;justify-content:center;">🔊</div>
+          </div>
+          <div style="font-size:15px;opacity:0.4;margin-top:16px;">23:08 · Rental Insurance · Lead #47</div>
+        </div>
+        <div class="mockup-label">AI voice call — closes at 11pm</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SLIDE 7 — CAC Arbitrage / Funnel ═══ -->
+<div class="slide" id="s7">
+  <div class="pad">
+    <div class="funnel-header">
+      <div class="pre">3 weeks · Real campaigns · Real audiences</div>
+      <h2>The math works.</h2>
+    </div>
+
+    <div class="funnel-cards">
+      <div class="funnel-card">
+        <div class="funnel-badge proved">&#10003; Proved</div>
+        <div class="funnel-title">Generate demand</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:48px; color:var(--ice); margin:8px 0;">$0.45</div>
+        <div class="funnel-detail">
+          <strong>336</strong> leads · <strong>$150</strong> ad spend
+        </div>
+      </div>
+
+      <div class="funnel-arrow">→</div>
+
+      <div class="funnel-card">
+        <div class="funnel-badge proved">&#10003; Proved</div>
+        <div class="funnel-title">Engage on WhatsApp</div>
+        <div style="display:flex; gap:12px; margin-top:12px;">
+          <div style="flex:1; background:rgba(37,211,102,0.08); border:1px solid rgba(37,211,102,0.2); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:14px; color:var(--wa-green); font-weight:600;">LUMI</div>
+            <div style="font-family:'Instrument Serif',serif; font-size:32px; color:var(--wa-green);">&lt;5s</div>
+          </div>
+          <div style="flex:1; background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.15); border-radius:10px; padding:12px; text-align:center;">
+            <div style="font-size:14px; color:#EF4444; font-weight:600;">HUMAN</div>
+            <div style="font-family:'Instrument Serif',serif; font-size:32px; color:#EF4444;">&gt;25min</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="funnel-arrow">→</div>
+
+      <div class="funnel-card">
+        <div class="funnel-badge next">&#8599; Next</div>
+        <div class="funnel-title">Estimated CAC</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:48px; color:var(--white); margin:8px 0;">$22</div>
+        <div class="funnel-detail">Commission per sale: <strong>$200</strong></div>
+      </div>
+    </div>
+
+    <div style="max-width:600px; margin:32px auto 0; text-align:center; padding:20px 32px; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.15); border-radius:16px;">
+      <div style="font-family:'Instrument Serif',serif; font-size:42px; color:var(--ice); font-style:italic;">~10x</div>
+      <div style="font-size:20px; color:var(--gray); margin-top:4px;">CAC to Commission ratio</div>
+    </div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 9 — Business Model ═══ -->
+<div class="slide" id="s9">
+  <div class="pad">
+    <div style="text-align:center; margin-bottom:48px;">
+      <div style="font-size:21px; color:var(--gray); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:8px;">How we win</div>
+      <h1 style="font-family:'Instrument Serif',serif; font-size:63px; font-weight:400;">Win on distribution. <span class="ice italic">Then own the relationship.</span></h1>
+    </div>
+
+    <div style="max-width:700px; margin:0 auto;">
+      <div style="background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.1); border-radius:24px; padding:56px 48px; position:relative; overflow:hidden; text-align:center;">
+        <div style="position:absolute; top:0; left:0; right:0; height:3px; background:var(--ice);"></div>
+        <div style="font-family:'Instrument Serif',serif; font-size:56px; color:var(--white); line-height:1.2;">Transactional model</div>
+        <div style="font-size:24px; color:var(--gray); margin-top:24px; line-height:1.8;">
+          We carry all the risk.<br>
+          <span style="color:var(--ice); font-weight:600; font-size:28px;">We sell. They earn.</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 10 — Team ═══ -->
+<div class="slide" id="s10">
+  <div class="pad" style="display:flex; flex-direction:column; align-items:center;">
+    <div style="text-align:center; margin-bottom:40px;">
+      <div style="font-size:16px; color:var(--gray); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:8px;">The Team</div>
+      <h1 style="font-family:'Instrument Serif',serif; font-size:48px; font-weight:400;">Built to <span class="ice italic">execute.</span></h1>
+    </div>
+
+    <div style="display:flex; gap:20px; max-width:1200px; align-items:stretch;">
+
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:16px; padding:28px 24px;">
+        <div style="font-size:28px; margin-bottom:8px;">🇧🇷</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:26px; color:var(--white);">Bernardo Precht</div>
+        <div style="font-size:14px; color:var(--ice); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; font-weight:600;">Co-Founder & GTM</div>
+      </div>
+
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:16px; padding:28px 24px;">
+        <div style="font-size:28px; margin-bottom:8px;">🇧🇷</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:26px; color:var(--white);">Elisa Pereira</div>
+        <div style="font-size:14px; color:var(--ice); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; font-weight:600;">Co-Founder & Product</div>
+      </div>
+
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:16px; padding:28px 24px;">
+        <div style="font-size:28px; margin-bottom:8px;">🇺🇾</div>
+        <div style="font-family:'Instrument Serif',serif; font-size:26px; color:var(--white);">Martin Coulthurst</div>
+        <div style="font-size:14px; color:var(--ice); text-transform:uppercase; letter-spacing:0.08em; margin-top:4px; font-weight:600;">Co-Founder & Operations</div>
+      </div>
+
+      <div style="flex:1; display:flex; flex-direction:column; gap:16px;">
+        <div style="flex:1; background:rgba(202,220,252,0.03); border:1px solid rgba(202,220,252,0.06); border-radius:16px; padding:22px 20px;">
+          <div style="font-family:'Instrument Serif',serif; font-size:22px; color:var(--white);">Anni</div>
+          <div style="font-size:13px; color:var(--ice); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; font-weight:600;">Strategic Advisor</div>
+        </div>
+        <div style="flex:1; background:rgba(202,220,252,0.03); border:1px solid rgba(202,220,252,0.06); border-radius:16px; padding:22px 20px;">
+          <div style="font-family:'Instrument Serif',serif; font-size:22px; color:var(--white);">Megumi</div>
+          <div style="font-size:13px; color:var(--ice); text-transform:uppercase; letter-spacing:0.08em; margin-top:2px; font-weight:600;">Strategic Advisor</div>
+        </div>
+      </div>
+
+    </div>
+    <div style="margin-top:28px; font-size:16px; color:var(--dim); letter-spacing:0.06em;">Stanford GSB '26</div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 11 — The Ask ═══ -->
+<div class="slide" id="s11">
+  <div class="ask-content" style="max-width:1000px;">
+    <div style="font-family:'Instrument Serif',serif; font-size:48px; font-weight:400; color:var(--white); margin-bottom:32px;">Our ask.</div>
+    <div class="ask-label">Seed Round</div>
+    <div class="ask-amount">$2.2M</div>
+    <div class="ask-round">SAFE</div>
+
+    <div style="display:flex; gap:16px; width:100%; margin-bottom:40px;">
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.1); border-radius:14px; padding:22px 20px;">
+        <div style="font-size:28px; font-weight:700; color:var(--ice); margin-bottom:8px;">45%</div>
+        <div style="font-size:15px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:0.06em;">GTM Engine</div>
+        <div style="font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5;">Build & validate acquisition channels across verticals</div>
+      </div>
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:14px; padding:22px 20px;">
+        <div style="font-size:28px; font-weight:700; color:var(--white); margin-bottom:8px;">30%</div>
+        <div style="font-size:15px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:0.06em;">Team</div>
+        <div style="font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5;">Founding engineer + PM + product designer</div>
+      </div>
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:14px; padding:22px 20px;">
+        <div style="font-size:28px; font-weight:700; color:var(--white); margin-bottom:8px;">20%</div>
+        <div style="font-size:15px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:0.06em;">AI & Infra</div>
+        <div style="font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5;">Models, APIs, platform</div>
+      </div>
+      <div style="flex:1; background:rgba(202,220,252,0.04); border:1px solid rgba(202,220,252,0.08); border-radius:14px; padding:22px 20px;">
+        <div style="font-size:28px; font-weight:700; color:var(--white); margin-bottom:8px;">5%</div>
+        <div style="font-size:15px; font-weight:600; color:var(--white); text-transform:uppercase; letter-spacing:0.06em;">Operations</div>
+        <div style="font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5;">Legal, compliance, admin</div>
+      </div>
+    </div>
+  </div>
+  <div class="lumi-watermark">lumi</div>
+</div>
+
+<!-- ═══ SLIDE 12 — Final: Maria + Punchline ═══ -->
+<div class="slide" id="s12" style="flex-direction:row; background:#0A0A0A;">
+  <div style="width:50%; height:100%; position:relative; overflow:hidden;">
+    <img src="slides/maria-dinner-notification.png" style="width:100%; height:100%; object-fit:cover; object-position:center top;" alt="Maria having dinner">
+  </div>
+  <div style="width:50%; display:flex; align-items:center; justify-content:center; padding:0 5vw;">
+    <div>
+      <div style="font-family:'Instrument Serif',serif; font-size:64px; color:var(--white);">We don't sell AI.</div>
+      <div style="font-family:'Instrument Serif',serif; font-size:72px; color:var(--ice); font-style:italic; margin-top:16px;">We sell acquired customers.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation dots -->
+<div class="slide-nav" id="nav"></div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const nav = document.getElementById('nav');
+
+// Build dots
+slides.forEach((_, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.onclick = () => slides[i].scrollIntoView({ behavior: 'smooth' });
+  nav.appendChild(dot);
+});
+
+// Update active dot on scroll + trigger animations
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = [...slides].indexOf(entry.target);
+      nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+      // Punchline animation
+      if (entry.target.id === 's13') {
+        const p1 = entry.target.querySelector('.punchline-1');
+        const p2 = entry.target.querySelector('.punchline-2');
+        p1.style.opacity = '1'; p1.style.transform = 'translateY(0)';
+        p2.style.opacity = '1'; p2.style.transform = 'translateY(0)';
+      }
+    }
+  });
+}, { threshold: 0.5 });
+
+slides.forEach(s => observer.observe(s));
+
+// Keyboard navigation
+let current = 0;
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    current = Math.min(current + 1, slides.length - 1);
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+  if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    current = Math.max(current - 1, 0);
+    slides[current].scrollIntoView({ behavior: 'smooth' });
+  }
+});
+</script>
+
+</body>
+</html>
